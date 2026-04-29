@@ -253,7 +253,7 @@ final class StatusWindowController: NSWindowController {
 
     init(message: String) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 190),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 240),
             styleMask: [.titled],
             backing: .buffered,
             defer: false
@@ -314,7 +314,8 @@ final class StatusWindowController: NSWindowController {
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
 
             buttonStack.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 34),
-            buttonStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+            buttonStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            buttonStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -24)
         ])
 
         super.init(window: window)
