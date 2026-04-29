@@ -6,9 +6,9 @@ A native macOS launcher that toggles Cloudflare WARP. Designed due to allow for 
 - If installed: shows `Launching ...` or `Closing ...` for 2 seconds while it toggles Cloudflare WARP.
 - If not installed: shows `Not Installed - Download` with `Download` linked to the Cloudflare macOS installer, plus a close button.
 
-## How Passwordless Launching Works
+## How No Password Launching Works
 
-macOS requires root privileges to load or unload `/Library/LaunchDaemons`. To avoid a password prompt every time, this app installs a small root-owned helper once as a LaunchDaemon.
+macOS requires root privileges to load or unload `/Library/LaunchDaemons`. To avoid a password prompt every time, this project installs a small root-owned helper once as a LaunchDaemon.
 
 The launcher app talks to that helper over a local Unix socket. The one-time helper install uses `sudo`; normal launch and close actions do not.
 
@@ -25,6 +25,16 @@ This creates:
 ```text
 build/Cloudflare WARP Helper.app
 build/helper/cloudflare-warp-helper
+build/Cloudflare WARP Helper.dmg
+```
+
+The DMG contains:
+
+```text
+Cloudflare WARP Helper.app
+Applications
+install-helper.sh
+uninstall-helper.sh
 ```
 
 ## Install Helper

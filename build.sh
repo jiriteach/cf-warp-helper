@@ -11,10 +11,14 @@ RESOURCES_DIR="$CONTENTS_DIR/Resources"
 HELPER_DIR="$BUILD_DIR/helper"
 ICON_SOURCE="$ROOT_DIR/Sources/applicationIcon.png"
 ICONSET_DIR="$BUILD_DIR/applicationIcon.iconset"
+DMG_STAGING_DIR="$BUILD_DIR/dmg-root"
+DMG_PATH="$BUILD_DIR/$APP_NAME.dmg"
 
 rm -rf "$APP_DIR" \
   "$BUILD_DIR/Cloudflare WARP Toggle.app" \
-  "$HELPER_DIR/cloudflare-warp-toggle-helper"
+  "$HELPER_DIR/cloudflare-warp-toggle-helper" \
+  "$DMG_STAGING_DIR" \
+  "$DMG_PATH"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR" "$HELPER_DIR"
 
 if [ ! -f "$ICON_SOURCE" ]; then
@@ -86,5 +90,23 @@ chmod +x "$HELPER_DIR/cloudflare-warp-helper"
 chmod +x "$RESOURCES_DIR/cloudflare-warp-helper"
 touch "$APP_DIR"
 
+mkdir -p "$DMG_STAGING_DIR"
+ditto "$APP_DIR" "$DMG_STAGING_DIR/$APP_NAME.app"
+ln -s /Applications "$DMG_STAGING_DIR/Applications"
+cp "$ROOT_DIR/install-helper.sh" "$DMG_STAGING_DIR/install-helper.sh"
+cp "$ROOT_DIR/uninstall-helper.sh" "$DMG_STAGING_DIR/uninstall-helper.sh"
+chmod +x "$DMG_STAGING_DIR/install-helper.sh"
+chmod +x "$DMG_STAGING_DIR/uninstall-helper.sh"
+
+hdiutil create \
+  -volname "$APP_NAME" \
+  -srcfolder "$DMG_STAGING_DIR" \
+  -ov \
+  -format UDZO \
+  "$DMG_PATH" >/dev/null
+
+rm -rf "$DMG_STAGING_DIR"
+
 echo "Built: $APP_DIR"
 echo "Built helper: $HELPER_DIR/cloudflare-warp-helper"
+echo "Built DMG: $DMG_PATH"
