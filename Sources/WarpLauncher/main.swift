@@ -13,6 +13,8 @@ private let helperPlistPath = "/Library/LaunchDaemons/local.cloudflare-warp-help
 private let oldHelperInstallPath = "/Library/PrivilegedHelperTools/local.cloudflare-warp-toggle.helper"
 private let oldHelperPlistPath = "/Library/LaunchDaemons/local.cloudflare-warp-toggle.helper.plist"
 private let oldHelperSocketPath = "/var/run/cloudflare-warp-toggle.sock"
+private let compactWindowSize = NSSize(width: 400, height: 190)
+private let expandedWindowSize = NSSize(width: 400, height: 240)
 
 struct CommandResult {
     let status: Int32
@@ -253,7 +255,7 @@ final class StatusWindowController: NSWindowController {
 
     init(message: String) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 240),
+            contentRect: NSRect(origin: .zero, size: compactWindowSize),
             styleMask: [.titled],
             backing: .buffered,
             defer: false
@@ -332,7 +334,17 @@ final class StatusWindowController: NSWindowController {
         window?.title = title
     }
 
+    func setExpanded(_ expanded: Bool) {
+        guard let window else {
+            return
+        }
+
+        window.setContentSize(expanded ? expandedWindowSize : compactWindowSize)
+        window.center()
+    }
+
     func setStatus(_ status: String) {
+        setExpanded(false)
         label.stringValue = status
         label.font = NSFont.systemFont(ofSize: 18, weight: .medium)
         label.alignment = .center
@@ -342,6 +354,7 @@ final class StatusWindowController: NSWindowController {
     }
 
     func showNotInstalled() {
+        setExpanded(true)
         let text = "Not Installed - Download"
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -371,6 +384,7 @@ final class StatusWindowController: NSWindowController {
     func showHelperNotInstalled(onInstall: @escaping () -> Void) {
         actionHandler = onInstall
         setStatus("Helper Not Installed - Install?")
+        setExpanded(true)
         actionButton.title = "Install"
         actionButton.isHidden = false
         closeButton.isHidden = false
