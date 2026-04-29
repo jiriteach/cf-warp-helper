@@ -244,16 +244,16 @@ func stopWarp() throws {
 }
 
 final class StatusWindowController: NSWindowController {
+    private let iconView = NSImageView()
     private let label = NSTextField(labelWithString: "")
     private let actionButton = NSButton(title: "Install", target: nil, action: nil)
     private let closeButton = NSButton(title: "Close", target: nil, action: nil)
     private let buttonStack = NSStackView()
-    private var labelCenterYConstraint: NSLayoutConstraint?
     private var actionHandler: (() -> Void)?
 
     init(message: String) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 150),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 190),
             styleMask: [.titled],
             backing: .buffered,
             defer: false
@@ -263,6 +263,14 @@ final class StatusWindowController: NSWindowController {
         window.isReleasedWhenClosed = false
         window.level = .floating
         window.center()
+
+        if let iconPath = Bundle.main.path(forResource: "applicationIcon", ofType: "icns") {
+            iconView.image = NSImage(contentsOfFile: iconPath)
+        } else {
+            iconView.image = NSApp.applicationIconImage
+        }
+        iconView.imageScaling = .scaleProportionallyUpOrDown
+        iconView.translatesAutoresizingMaskIntoConstraints = false
 
         label.stringValue = message
         label.font = NSFont.systemFont(ofSize: 18, weight: .medium)
@@ -290,16 +298,20 @@ final class StatusWindowController: NSWindowController {
         buttonStack.addArrangedSubview(closeButton)
 
         let contentView = NSView()
+        contentView.addSubview(iconView)
         contentView.addSubview(label)
         contentView.addSubview(buttonStack)
         window.contentView = contentView
 
-        labelCenterYConstraint = label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -10)
-
         NSLayoutConstraint.activate([
+            iconView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
+            iconView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 64),
+            iconView.heightAnchor.constraint(equalToConstant: 64),
+
+            label.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: 32),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            labelCenterYConstraint!,
 
             buttonStack.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 34),
             buttonStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
@@ -320,7 +332,6 @@ final class StatusWindowController: NSWindowController {
     }
 
     func setStatus(_ status: String) {
-        labelCenterYConstraint?.constant = -10
         label.stringValue = status
         label.font = NSFont.systemFont(ofSize: 18, weight: .medium)
         label.alignment = .center
@@ -330,7 +341,6 @@ final class StatusWindowController: NSWindowController {
     }
 
     func showNotInstalled() {
-        labelCenterYConstraint?.constant = -24
         let text = "Not Installed - Download"
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -360,7 +370,6 @@ final class StatusWindowController: NSWindowController {
     func showHelperNotInstalled(onInstall: @escaping () -> Void) {
         actionHandler = onInstall
         setStatus("Helper Not Installed - Install?")
-        labelCenterYConstraint?.constant = -24
         actionButton.title = "Install"
         actionButton.isHidden = false
         closeButton.isHidden = false

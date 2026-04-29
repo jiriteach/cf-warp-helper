@@ -35,23 +35,6 @@ Cloudflare WARP Helper.app
 Applications
 install-helper.sh
 uninstall-helper.sh
-bypass-helper.sh
-```
-
-## Install From DMG
-
-After opening the DMG, copy `Cloudflare WARP Helper.app` to `Applications`.
-
-If macOS Gatekeeper prevents the app from opening, run the included bypass script:
-
-```sh
-./bypass-helper.sh
-```
-
-The script removes quarantine attributes from the installed app:
-
-```sh
-xattr -cr "/Applications/Cloudflare WARP Helper.app"
 ```
 
 ## Install Helper

@@ -95,10 +95,8 @@ ditto "$APP_DIR" "$DMG_STAGING_DIR/$APP_NAME.app"
 ln -s /Applications "$DMG_STAGING_DIR/Applications"
 cp "$ROOT_DIR/install-helper.sh" "$DMG_STAGING_DIR/install-helper.sh"
 cp "$ROOT_DIR/uninstall-helper.sh" "$DMG_STAGING_DIR/uninstall-helper.sh"
-cp "$ROOT_DIR/bypass-helper.sh" "$DMG_STAGING_DIR/bypass-helper.sh"
 chmod +x "$DMG_STAGING_DIR/install-helper.sh"
 chmod +x "$DMG_STAGING_DIR/uninstall-helper.sh"
-chmod +x "$DMG_STAGING_DIR/bypass-helper.sh"
 
 hdiutil create \
   -volname "$APP_NAME" \
