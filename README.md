@@ -1,5 +1,7 @@
 # Cloudflare WARP Helper
 
+<img height="207" alt="Screenshot 2026-05-28 at 16 53 31" src="https://github.com/user-attachments/assets/6d8bf4ab-abe1-4d56-ba39-9bccb700633f" />
+
 A native macOS launcher that toggles Cloudflare WARP. Designed due to allow for the Cloudlare WARP application to be opened and closed with one-click since there is no close open when using Cloudflare One. Also does not require an administrator password each time it runs.
 
 - On start: shows `Checking ...` while it verifies that Cloudflare WARP is installed and gets the version .
